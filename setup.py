@@ -14,8 +14,8 @@ class Proxy(object):
     def __init__(self):
         super(Proxy, self).__init__()
         self.zip_direct_url = 'https://ultrasurf.us/download/u.zip'
-        self.zip_repo_url = 'https://github.com/bharathibh/proxy/blob/master/u.zip'
-        self.ini_repo_url = 'https://github.com/bharathibh/proxy/blob/master/u.ini'
+        self.zip_repo_url = 'https://github.com/bharathibh/proxy/raw/master/u.zip'
+        self.ini_repo_url = 'https://raw.githubusercontent.com/bharathibh/proxy/master/u.ini'
         self.extract_dir = '{}\\usurf'.format(tempfile.gettempdir())
     
     def _get_process(self, cmd):
@@ -39,9 +39,16 @@ class Proxy(object):
         zip_file = tempfile.NamedTemporaryFile()
         zip_file.write(response_zip.content)
         extracted = self._extract_zip(zip_file)
-        urllib.request.urlretrieve(self.ini_repo_url, self.extract_dir)
+        config_filename = os.path.join(self.extract_dir, os.path.split(self.ini_repo_url)[1])
+        
+        # download preloaded config
+        urllib.request.urlretrieve(self.ini_repo_url, config_filename)
+        
+        o, e = self._get_process('whoami')
+        print('o {} e {}'.format(str(o).strip(),e))
+        # change working dir to system's temp_dir and start ultrasurf
         os.chdir(self.extract_dir)
-        # self._get_process('start /min {}\\{}'.format(self.extract_dir, glob.glob('*.exe')[0]))
+        self._get_process('start {}\\{}'.format(self.extract_dir, glob.glob('*.exe')[0]))
         
 
         # self._get_process('start {}\\')
