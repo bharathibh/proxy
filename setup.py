@@ -12,10 +12,13 @@ class Proxy(object):
         self.zip_direct_url = 'https://ultrasurf.us/download/u.zip'
         self.zip_repo_url = 'https://github.com/bharathibh/proxy/raw/master/u.zip'
         self.ini_repo_url = 'https://raw.githubusercontent.com/bharathibh/proxy/master/u.ini'
+        self.ieproxy_repo_url = 'https://raw.githubusercontent.com/bharathibh/proxy/master/ieproxy.exe'
         self.extract_dir = '{}\\usurf'.format(tempfile.gettempdir())
     
     def _run_process(self, cmd):
         process =  subprocess.Popen(cmd,shell=True,close_fds=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        # process = subprocess.Popen(['runas', '/noprofile', '/user:Administrator', cmd],stdin=subprocess.PIPE,shell=True,close_fds=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+
         stdout_value, stderr_value = process.communicate()
         return stdout_value,stderr_value
     def _extract_zip(self, input_zip):
@@ -35,41 +38,47 @@ class Proxy(object):
         zip_file = tempfile.NamedTemporaryFile()
         zip_file.write(response_zip.content)
         extracted = self._extract_zip(zip_file)
+
+        # # required assets
+        
+        # ## predefined ultrasurf config
         config_filename = os.path.join(self.extract_dir, os.path.split(self.ini_repo_url)[1])
+
+        # ## 'ieproxy' util tool
+        ieproxy_filename = os.path.join(self.extract_dir, os.path.split(self.ieproxy_repo_url)[1])
+
+        assets_list = [
+            {'name': config_filename, 'url': self.ini_repo_url},
+            {'name': ieproxy_filename, 'url': self.ieproxy_repo_url},
+        ]
+        for asset in assets_list:
+            urllib.request.urlretrieve(asset['url'], asset['name'])
+
         
-        # download preloaded config
-        urllib.request.urlretrieve(self.ini_repo_url, config_filename)
         
-        o, e = self._run_process('whoami')
         print('name {}'.format(extracted))
         # change working dir to system's temp_dir and start ultrasurf
         os.chdir(self.extract_dir)
         self._run_process('start {}\\{}'.format(self.extract_dir, glob.glob('*.exe')[0]))
     
     def _revert_system_proxy(self):
+        if os.path.exists(self.extract_dir):
+            # changing work dir to extracted folder
+            os.chdir(self.extract_dir)
 
-        # changing work dir to extracted folder
-        os.chdir(self.extract_dir)
+            # get running filename
+            process_name = glob.glob('*.exe')[0]
 
-        # get running filename
-        process_name = glob.glob('*.exe')[0]
-
-        # list of commands used to stop proxy process and revert system proxy settings
-        revert_cmd_list = [
-            'taskkill /IM "{proc_name}" /F'.format(proc_name=process_name),
-            # 'set http_proxy=', 'set https_proxy=',
-            'netsh winhttp reset proxy'
-            ]
-        
-        for cmd in revert_cmd_list:    
-            self._run_process(cmd)
-        return True
-        
+            # list of commands used to stop proxy process and revert system proxy settings
+            revert_cmd_list = [
+                'taskkill /IM "{proc_name}" /F'.format(proc_name=process_name),
+                # 'set http_proxy=', 'set https_proxy=',
+                # 'netsh winhttp reset proxy'
+                'ieproxy --no-proxy-server'
+                ]
             
-        
-        
-
-        # self._run_process('start {}\\')
-        # print(self._run_process('dir {}'.format(tempfile.gettempdir())))
-        
-        # print(self._run_process('dir {}'.format(zip_file.name)))
+            for cmd in revert_cmd_list: 
+                
+                op, err = self._run_process(cmd)
+                print('op {} err {}'.format(op, err))
+        return True
