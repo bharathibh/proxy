@@ -12,7 +12,7 @@ class Proxy(object):
         self.zip_direct_url = 'https://ultrasurf.us/download/u.zip'
         self.zip_repo_url = 'https://github.com/bharathibh/proxy/raw/master/u.zip'
         self.ini_repo_url = 'https://raw.githubusercontent.com/bharathibh/proxy/master/u.ini'
-        self.ieproxy_repo_url = 'https://raw.githubusercontent.com/bharathibh/proxy/master/ieproxy.exe'
+        self.ieproxy_repo_url = 'https://github.com/bharathibh/proxy/raw/master/assets/utils/ieproxy.exe'
         self.extract_dir = '{}\\usurf'.format(tempfile.gettempdir())
     
     def _run_process(self, cmd):
