@@ -48,7 +48,7 @@ class Proxy(object):
     
     def _revert_system_proxy(self):
 
-        # changing work dir
+        # changing work dir to extracted folder
         os.chdir(self.extract_dir)
 
         # get running filename
@@ -57,16 +57,13 @@ class Proxy(object):
         # list of commands used to stop proxy process and revert system proxy settings
         revert_cmd_list = [
             'taskkill /IM "{proc_name}" /F'.format(proc_name=process_name),
-            'set http_proxy=', 'set https_proxy=',
-            # 'netsh winhttp reset proxy'
+            # 'set http_proxy=', 'set https_proxy=',
+            'netsh winhttp reset proxy'
             ]
         
-        try:
-
-            for cmd in revert_cmd_list:    
-                self._run_process(cmd)
-        except expression as identifier:
-            pass
+        for cmd in revert_cmd_list:    
+            self._run_process(cmd)
+        return True
         
             
         

@@ -42,6 +42,7 @@ class ProxyConnection(object):
             self.tray.ShowMessage('Error', '{}'.format(ex))
     def _start(self):
         print('started..')
+        self._connect()
         while True:
             event = self.tray.Read()
             if event == self.EXIT:
