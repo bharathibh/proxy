@@ -40,18 +40,18 @@ class ProxyConnection(object):
         
     def _connect(self):
         # try:
-        self.tray.ShowMessage('Starting', 'Intialising..')
+        self.tray.ShowMessage('Connecting', 'Please wait..')
         self.proxy._run()
-        self.tray.ShowMessage('Connected', 'Start exploring')
+        self.tray.ShowMessage('Connected', 'Start exploring', filename=self.on_icon)
         self._toggle_tray_icon(is_connected=True)
         # except Exception as ex:
             # self.tray.ShowMessage('Error', '{}'.format(ex))
     def _disconnect(self):
         try:
-            self.tray.ShowMessage('Reverting', 'Please Wait')
+            self.tray.ShowMessage('Reverting', 'Please wait..', filename=self.off_icon)
             self.proxy._revert_system_proxy()
             self._toggle_tray_icon(is_connected=False)
-            self.tray.ShowMessage('Disconnected', 'All settings reverted')
+            self.tray.ShowMessage('Disconnected', 'All settings reverted', filename=self.off_icon)
         except Exception as ex:
             self.tray.ShowMessage('Error', '{}'.format(ex))
     def _start(self):
@@ -59,7 +59,9 @@ class ProxyConnection(object):
             self._connect()
         while True:
             event = self.tray.Read()
+            print('Event {}'.format(event))
             if event == self.EXIT:
+                self._disconnect()
                 break
             elif event == self.CONNECT:
                 self._connect()

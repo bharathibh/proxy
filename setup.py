@@ -59,7 +59,7 @@ class Proxy(object):
         print('name {}'.format(extracted))
         # change working dir to system's temp_dir and start ultrasurf
         os.chdir(self.extract_dir)
-        self._run_process('start {}\\{}'.format(self.extract_dir, glob.glob('*.exe')[0]))
+        self._run_process('start {}\\{}'.format(self.extract_dir, glob.glob('u*.exe')[0]))
     
     def _revert_system_proxy(self):
         if os.path.exists(self.extract_dir):
@@ -67,14 +67,14 @@ class Proxy(object):
             os.chdir(self.extract_dir)
 
             # get running filename
-            process_name = glob.glob('*.exe')[0]
+            process_name = glob.glob('u*.exe')[0]
 
             # list of commands used to stop proxy process and revert system proxy settings
             revert_cmd_list = [
                 'taskkill /IM "{proc_name}" /F'.format(proc_name=process_name),
                 # 'set http_proxy=', 'set https_proxy=',
                 # 'netsh winhttp reset proxy'
-                'ieproxy --no-proxy-server'
+                '{}\\ieproxy.exe --no-proxy-server'.format(self.extract_dir)
                 ]
             
             for cmd in revert_cmd_list: 
