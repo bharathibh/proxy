@@ -1,0 +1,10 @@
+language: python
+os: windows
+python:
+  - "3.6"
+  - "3.7"
+cache: pip
+install:
+  - pip install -r requirements.txt
+script:
+  - tests/test_proxy.py
