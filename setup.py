@@ -32,7 +32,7 @@ class ProxyConnection(object):
         self.is_connected = False
     
     def _toggle_tray_icon(self, is_connected=True):
-        tooltip_msg = 'Cloud Server {}'.format('connected' if is_connected else 'disconnected')
+        tooltip_msg = 'Cloud {}'.format('connected' if is_connected else 'disconnected')
         self.tray.Update(menu=self.menu_def, filename=self.on_icon if is_connected else self.off_icon, tooltip=tooltip_msg)
         self.is_connected = is_connected
         return True
