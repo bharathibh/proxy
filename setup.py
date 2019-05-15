@@ -39,6 +39,10 @@ class ProxyConnection(object):
         
     def _connect(self):
         try:
+            if self.is_connected:
+                self.tray.ShowMessage('Already Connected', 'Start exploring', filename=self.on_icon)
+                return True
+            # show tray notification and try to connect with proxy
             self.tray.ShowMessage('Connecting', 'Please wait..')
             self._toggle_tray_icon(is_connected=True)
             self.proxy._run()
@@ -46,26 +50,37 @@ class ProxyConnection(object):
         
         except Exception as ex:
             self.tray.ShowMessage('Error', '{}'.format(ex))
+            raise ex
     def _disconnect(self):
         try:
+            if not self.is_connected:
+                self.tray.ShowMessage('Disconnected', 'Please connect to explore', filename=self.on_icon)
+                return True
+            # on disconnecting revert system proxy settings and disconnect
             self.tray.ShowMessage('Reverting', 'Please wait..', filename=self.off_icon)
             self._toggle_tray_icon(is_connected=False)
             self.proxy._revert_system_proxy()
             self.tray.ShowMessage('Disconnected', 'All settings reverted', filename=self.off_icon)
         except Exception as ex:
             self.tray.ShowMessage('Error', '{}'.format(ex))
+            raise ex
     def _start(self):
+        
+
         if not self.is_connected:
             self._connect()
         while True:
+            
             event = self.tray.Read()
             if event == self.EXIT:
                 self._disconnect()
+                self.tray.ShowMessage('See you soon!', 'Bye', filename=self.off_icon)
                 break
             elif event == self.CONNECT:
                 self._connect()
             elif event == self.DISCONNECT:
                 self._disconnect()
+                
 
 if __name__ == "__main__":
     proxy_conn = ProxyConnection()
@@ -74,6 +89,5 @@ if __name__ == "__main__":
         proxy_conn._start()
     except Exception as ex:
         proxy_conn.proxy._revert_system_proxy()
-        raise ex
     
     
