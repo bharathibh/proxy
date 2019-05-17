@@ -14,8 +14,8 @@ class ProxyConnection(object):
         
         # tray icon details
         self.icon_dir = os.path.join(os.getcwd().replace(os.sep, '/')+'/assets/icons')
-        self.on_icon = os.path.join(self.icon_dir+'/on.png')
-        self.off_icon = os.path.join(self.icon_dir+'/off.png')
+        self.on_icon = os.path.join(self.icon_dir+'/on.ico')
+        self.off_icon = os.path.join(self.icon_dir+'/off.ico')
         # ##
 
         # system tray items
