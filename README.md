@@ -26,7 +26,8 @@ This simple tool will run in background and control Ultrasurf right from your sy
   - this tool will download Ultrasurf and `ieproxy.exe` binaries on the windows' `%temp% / usurf` folder
   - then the it will start Ultrasurf in the background with no window
  
-When **Connect**ing, it will download ultrasurf and `ieproxy.exe` into `%temp% / usurf` folder
+When **Connect**ing, it will download ultrasurf and `ieproxy.exe` into `%temp% / usurf` folder.
+
 When **Disconnect**ing, ultrasurf process will stop and System Proxy settings will be cleared by `ieproxy.exe`
 
 **Note: If you're using proxy server for internet, then please update these varaibles**
