@@ -1,6 +1,6 @@
 # Proxy
 
-[![Build Status](https://travis-ci.org/bharathibh/proxy.svg?branch=master)](https://travis-ci.org/bharathibh/proxy)
+[![Build Status](https://app.travis-ci.com/bharathibh/proxy.svg?token=gQbHyqMVP5fUNjzpCpef)](https://app.travis-ci.com/bharathibh/proxy)
 ### Demo
 Unblock sites like facebook, twitter on your workplace on windows
 
